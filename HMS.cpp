@@ -114,28 +114,119 @@ private:
 
 public:
     // Constructor
-    Doctor(int did, string n, Department d);
+    Doctor(int did, string n, Department d) {
+        this->id = did;
+        this->name = n;
+        this->department = d;
+    }
 
     // ========== ORIGINAL FEATURES ========== //
 
-    void addAppointment(int patientId);
-    int seePatient();
+    void addAppointment(int patientId) {
+        appointmentQueue.push(patientId);
+    }
+    int seePatient() {
+        if (appointmentQueue.empty()) {
+            return -1;
+        } 
+        else{
 
-    int getId();
-    string getName();
-    string getDepartment();
+            int patientId = appointmentQueue.front();
+            appointmentQueue.pop();
+            return patientId;
+
+        }
+        int getId() {
+            return id;
+        }
+        string getName() {
+            return name;
+        }
+
+    string getDepartment(){
+        switch (department)
+        {
+        case CARDIOLOGY:
+            return "Cardiology";
+
+        case NEUROLOGY:
+            return "Neurology";
+
+        case ORTHOPEDICS:
+            return "Orthopedics";
+
+        case PEDIATRICS:
+            return "Pediatrics";
+
+        case EMERGENCY:
+            return "Emergency";
+
+        case GENERAL:
+            return "General";
+
+        default:
+            return "General";
+        }
+        }
 
 
     // ========== NEW FEATURES ========== //
 
     // Display waiting patients
-    void displayAppointments();
+    void displayAppointments() {
+        void displayAppointments()
+        {
+            if (appointmentQueue.empty())
+            {
+                cout << "No appointments available." << endl;
+                return;
+            }
+
+            queue<int> temp = appointmentQueue;
+
+            cout << "Appointments: ";
+
+            while (!temp.empty())
+            {
+                cout << temp.front() << " ";
+                temp.pop();
+            }
+
+            cout << endl;
+        }
+    }
 
     // Cancel appointment
-    void cancelAppointment(int patientId);
+    void cancelAppointment(int patientId){
+		queue<int> tempQueue;
+        if (appointmentQueue.empty()) {
+            cout << "no appointments availalable" << endl;
+            return;
+        }
+        queue<int>temp;
+        bool found = false;
+        while (!appointmentQueue.empty()) {
+            int currentPatientId = appointmentQueue.front();
+            appointmentQueue.pop();
+            if (currentPatientId == patientId) {
 
+                found = true;// Skip adding this patient to the temp queue
+            }
+            else {
+
+                temp.push(currentPatientId);
+            }
+        }
+        appointmentQueue = temp;
+        if (found) {
+            cout << "Appointment cancelled successfully  " << endl;
+        }
+        else {
+            cout << "Appointment not found  " << endl;
+        }
     // Number of waiting patients
-    int getAppointmentCount();
+    int getAppointmentCount(){
+        return appointmentQueue.size();
 };
 
 
