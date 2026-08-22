@@ -30,13 +30,22 @@ private:
     int severity;
 
 public:
-    EmergencyCase(int pid, int s);
+    EmergencyCase(int pid, int s) {
+        this->patientId = pid;
+		this->severity = s;
+    }
 
-    int getPatientId() const;
-    int getSeverity() const;
+    int getPatientId() const {
+        return patientId;
+    }
+    int getSeverity() const {
+        return severity;
+    }
 
     // Higher severity = higher priority
-    bool operator<(const EmergencyCase& other) const;
+    bool operator<(const EmergencyCase& other) const {
+        return severity < other.severity;
+    }
 };
 
 
@@ -128,20 +137,21 @@ public:
     int seePatient() {
         if (appointmentQueue.empty()) {
             return -1;
-        } 
-        else{
+        }
+        else {
 
             int patientId = appointmentQueue.front();
             appointmentQueue.pop();
             return patientId;
 
         }
-        int getId() {
-            return id;
-        }
-        string getName() {
-            return name;
-        }
+    }
+    int getId() {
+        return id;
+    }
+    string getName() {
+        return name;
+    }
 
     string getDepartment(){
         switch (department)
@@ -174,31 +184,28 @@ public:
 
     // Display waiting patients
     void displayAppointments() {
-        void displayAppointments()
+        if (appointmentQueue.empty())
         {
-            if (appointmentQueue.empty())
-            {
-                cout << "No appointments available." << endl;
-                return;
-            }
-
-            queue<int> temp = appointmentQueue;
-
-            cout << "Appointments: ";
-
-            while (!temp.empty())
-            {
-                cout << temp.front() << " ";
-                temp.pop();
-            }
-
-            cout << endl;
+            cout << "No appointments available." << endl;
+            return;
         }
+
+        queue<int> temp = appointmentQueue;
+
+        cout << "Appointments: ";
+
+        while (!temp.empty())
+        {
+            cout << temp.front() << " ";
+            temp.pop();
+        }
+
+        cout << endl;
     }
 
     // Cancel appointment
-    void cancelAppointment(int patientId){
-		queue<int> tempQueue;
+    void cancelAppointment(int patientId) {
+        queue<int> tempQueue;
         if (appointmentQueue.empty()) {
             cout << "no appointments availalable" << endl;
             return;
@@ -224,9 +231,11 @@ public:
         else {
             cout << "Appointment not found  " << endl;
         }
+    }
     // Number of waiting patients
-    int getAppointmentCount(){
+    int getAppointmentCount() {
         return appointmentQueue.size();
+    }
 };
 
 
@@ -259,7 +268,15 @@ private:
 public:
 
     // Constructor
-    Hospital();
+    Hospital() {
+        patientCounter = 1;
+        doctorCounter = 1;
+        // Initialize room counts
+        generalRooms = 10;
+        icuRooms = 5;
+        privateRooms = 3;
+		semiPrivateRooms = 4;
+    }
 
 
     // =====================================================
@@ -270,17 +287,55 @@ public:
         string name,
         int age,
         string contact
-    );
+    ){
+        Patient newPatient(patientCounter, name, age, contact);
+        patients.push_back(newPatient);
+        return patientCounter++;
+	}
 
     int addDoctor(
         string name,
         Department dept
-    );
+    ) {
+        Doctor newDoctor(doctorCounter, name, dept);
+        doctors.push_back(newDoctor);
+        return doctorCounter++;
+    }
 
     void admitPatient(
         int patientId,
         RoomType type
-    );
+    ){
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            if (patient->getAdmissionStatus()) {
+                cout << "Patient is already admitted." << endl;
+                return;
+            }
+            if (!isRoomAvailable(type)) {
+                cout << "No rooms available of the requested type." << endl;
+                return;
+            }
+            patient->admitPatient(type);
+            switch (type) {
+                case GENERAL_WARD:
+                    generalRooms--;
+                    break;
+                case ICU:
+                    icuRooms--;
+                    break;
+                case PRIVATE_ROOM:
+                    privateRooms--;
+                    break;
+                case SEMI_PRIVATE:
+                    semiPrivateRooms--;
+                    break;
+            }
+            cout << "Patient admitted successfully." << endl;
+        } else {
+            cout << "Patient not found." << endl;
+        }
+	}
 
     void addEmergency(
         int patientId
@@ -430,7 +485,20 @@ public:
 
     bool isRoomAvailable(
         RoomType type
-    );
+    ){
+        switch (type) {
+        case GENERAL_WARD:
+            return generalRooms > 0;
+        case ICU:
+            return icuRooms > 0;
+        case PRIVATE_ROOM:
+            return privateRooms > 0;
+        case SEMI_PRIVATE:
+            return semiPrivateRooms > 0;
+        default:
+            return false;
+        }
+	}
 
 
     // =====================================================
@@ -438,7 +506,13 @@ public:
     // Display Room Status
     // ===================================================== //
 
-    void displayRoomStatus();
+    void displayRoomStatus(){
+        cout << "Room Status:" << endl;
+        cout << "General Ward: " << generalRooms << " available" << endl;
+        cout << "ICU: " << icuRooms << " available" << endl;
+        cout << "Private Room: " << privateRooms << " available" << endl;
+        cout << "Semi-Private Room: " << semiPrivateRooms << " available" << endl;
+	}
 
 
     // =====================================================
