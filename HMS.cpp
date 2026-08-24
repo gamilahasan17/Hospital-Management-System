@@ -492,6 +492,7 @@ public:
             patient->displayPrescriptions();
         } else {
 			cout << "Patient not found." << endl;
+		}
     }
 
 
@@ -603,7 +604,7 @@ public:
     void cancelAppointment(
         int doctorId,
         int patientId
-    );
+    )
     {
         for (Doctor& doctor : doctors)
         {
@@ -621,7 +622,7 @@ public:
     // Doctor Sees Next Patient
     // ===================================================== //
 
-    void doctorSeePatient(int doctorId);
+    void doctorSeePatient(int doctorId)
         {
             for (Doctor& doctor : doctors)
             {
