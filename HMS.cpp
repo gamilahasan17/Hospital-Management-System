@@ -343,14 +343,46 @@ public:
 
     int handleEmergency();
 
-    void bookAppointment(
-        int doctorId,
-        int patientId
-    );
+    void bookAppointment(int doctorId, int patientId);
+    {
+        Doctor* doctor = nullptr;
+        Patient* patient = nullptr;
+        for (auto& d : doctors) {
+            if (d.getId() == doctorId) {
+                doctor = &d;
+                break;
+            }
+        }
+        for (auto& p : patients) {
+            if (p.getId() == patientId) {
+                patient = &p;
+                break;
+            }
+        }
+        if (doctor == nullptr && patient == nullptr) {
+            cout << "Doctor and Patient not found." << endl;
+            return;
+        }
 
-    void displayPatientInfo(
-        int patientId
-    );
+        if (doctor == nullptr) {
+            cout << "Doctor not found." << endl;
+            return;
+        }
+
+        if (patient == nullptr) {
+            cout << "Patient not found." << endl;
+            return;
+        }
+        doctor->addAppointment(patientId);
+
+        cout << "Appointment booked successfully." << endl;
+
+    }
+    
+
+    void displayPatientInfo(int patientId);
+  
+
 
     void displayDoctorInfo(
         int doctorId
@@ -572,17 +604,48 @@ public:
         int doctorId,
         int patientId
     );
-
+    {
+        for (Doctor& doctor : doctors)
+        {
+            if (doctor.getId() == doctorId)
+            {
+                doctor.cancelAppointment(patientId);
+                return;
+            }
+        }
+        cout << "Doctor not found." << endl;
+    }
 
     // =====================================================
     // NEW FEATURE 19
     // Doctor Sees Next Patient
     // ===================================================== //
 
-    void doctorSeePatient(
-        int doctorId
-    );
+    void doctorSeePatient(int doctorId);
+        {
+            for (Doctor& doctor : doctors)
+            {
+                if (doctor.getId() == doctorId)
+                {
+                    int patientId = doctor.seePatient();
 
+                    if (patientId == -1)
+                    {
+                        cout << "No patients waiting." << endl;
+                    }
+                    else
+                    {
+                        cout << "Doctor " << doctor.getName()
+                            << " is now seeing patient "
+                            << patientId << endl;
+                    }
+
+                    return;
+                }
+            }
+
+            cout << "Doctor not found." << endl;
+        }
 
     // =====================================================
     // NEW FEATURE 20
