@@ -436,7 +436,15 @@ public:
     void prescribeMedicine(
         int patientId,
         string medicine
-    );
+    ) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            patient->addPrescription(medicine);
+            cout << "Prescription added successfully." << endl;
+        } else {
+            cout << "Patient not found." << endl;
+		}
+    }
 
 
     // =====================================================
@@ -446,7 +454,13 @@ public:
 
     void displayPrescriptions(
         int patientId
-    );
+    ) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            patient->displayPrescriptions();
+        } else {
+			cout << "Patient not found." << endl;
+    }
 
 
     // =====================================================
@@ -538,7 +552,15 @@ public:
 
     void displayDoctorAppointments(
         int doctorId
-    );
+    ) {
+		Doctor* doctor = findDoctor(doctorId);
+        if (doctor != nullptr) {
+            cout << "Appointments for Dr. " << doctor->getName() << ": ";
+            doctor->displayAppointments();
+        } else {
+            cout << "Doctor not found." << endl;
+		}
+    }
 
 
     // =====================================================
