@@ -70,24 +70,80 @@ private:
 
 public:
     // Constructor
-    Patient(int pid, string n, int a, string c);
+    Patient(int pid, string n, int a, string c) {
+        this->id = pid;
+        this->name = n;
+        this->age = a;
+        this->contact = c;
+        this->isAdmitted = false;
+        this->bill = 0;
+    }
 
     // ========== ORIGINAL FEATURES ========== //
 
-    void admitPatient(RoomType type);
-    void dischargePatient();
+    void admitPatient(RoomType type) {
+        if (isAdmitted) {
+            cout << "Patient is already admitted." << endl;
+            return;
+        }
 
-    void addMedicalRecord(string record);
+        isAdmitted = true;
+        roomType = type;
+        addMedicalRecord("Patient admitted to hospital");
+
+        switch (type) {
+            case GENERAL_WARD:
+                bill += 500;
+                break;
+            case ICU:
+                bill += 3000;
+                break;
+            case PRIVATE_ROOM:
+                bill += 1500;
+                break;
+            case SEMI_PRIVATE:
+                bill += 1000;
+                break;
+        }
+    }
+
+    void dischargePatient() {
+        if (!isAdmitted) {
+            cout << "Patient is not currently admitted." << endl;
+            return;
+        }
+
+        isAdmitted = false;
+        addMedicalRecord("Patient discharged from hospital");
+    }
+
+    void addMedicalRecord(string record) {
+        medicalHistory.push(record);
+    }
 
     void requestTest(string testName);
     string performTest();
 
-    void displayHistory();
+    void displayHistory() {
+        cout << "Medical History for " << name << " (ID: " << id << "):" << endl;
 
-    int getId();
-    string getName();
+        stack<string> temp = medicalHistory;
+        while (!temp.empty()) {
+            cout << "- " << temp.top() << endl;
+            temp.pop();
+        }
+    }
 
-    bool getAdmissionStatus();
+    int getId() {
+        return id;
+    }
+    string getName() {
+        return name;
+    }
+
+    bool getAdmissionStatus() {
+        return isAdmitted;
+    }
 
 
     // ========== NEW FEATURES ========== //
@@ -106,8 +162,12 @@ public:
 
     // Additional Getters
     int getAge();
-    string getContact();
-    RoomType getRoomType();
+    string getContact() {
+        return contact;
+    }
+    RoomType getRoomType() {
+        return roomType;
+    }
 };
 
 
@@ -424,9 +484,15 @@ public:
     // Discharge Patient
     // ===================================================== //
 
-    void dischargePatient(
-        int patientId
-    );
+    void dischargePatient(int patientId) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            patient->dischargePatient();
+            cout << "Patient discharged successfully." << endl;
+        } else {
+            cout << "Patient not found." << endl;
+        }
+    }
 
 
     // =====================================================
@@ -501,9 +567,14 @@ public:
     // Patient Bill
     // ===================================================== //
 
-    void displayPatientBill(
-        int patientId
-    );
+    void displayPatientBill(int patientId) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            patient->displayBill();
+        } else {
+            cout << "Patient not found." << endl;
+        }
+    }
 
 
     // =====================================================
