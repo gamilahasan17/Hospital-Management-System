@@ -23,7 +23,6 @@ enum RoomType {
 };
 
 // ========== EMERGENCY CASE CLASS ========== //
-// Advanced Feature: priority_queue
 class EmergencyCase {
 private:
     int patientId;
@@ -32,7 +31,7 @@ private:
 public:
     EmergencyCase(int pid, int s) {
         this->patientId = pid;
-		this->severity = s;
+        this->severity = s;
     }
 
     int getPatientId() const {
@@ -122,10 +121,11 @@ public:
     }
 
     void requestTest(string testName) {
-		testQueue.push(testName);
-		addMedicalRecord("Test requested: " + testName);
-	}
-	
+        testQueue.push(testName);
+        addMedicalRecord("Test requested: " + testName);
+        cout << "Test requested successfully." << endl;
+    }
+
     string performTest() {
         if (testQueue.empty()) {
             return "No tests pending";
@@ -137,14 +137,14 @@ public:
         addMedicalRecord("Test performed: " + test);
 
         return test;
-	}
+    }
 
     void displayHistory() {
         cout << "Medical History for " << name << " (ID: " << id << "):" << endl;
 
         stack<string> temp = medicalHistory;
         while (!temp.empty()) {
-            cout << "- " << temp.top() << endl;
+            cout << temp.top() << endl;
             temp.pop();
         }
     }
@@ -164,62 +164,63 @@ public:
     // ========== NEW FEATURES ========== //
 
     // Medical Tests
-	void displayPendingTests() {
-		cout << "Pending Tests for " << name << " (ID: " << id << "):" << endl;
+    void displayPendingTests() {
+        cout << "Pending Tests:" << endl;
 
-		if (testQueue.empty()) {
-			cout << "No tests pending." << endl;
-			return;
-		}
+        if (testQueue.empty()) {
+            cout << "No tests pending." << endl;
+            return;
+        }
 
-		queue<string> temp = testQueue;
-		while (!temp.empty()) {
-			cout << "- " << temp.front() << endl;
-			temp.pop();
-		}
-	}
+        queue<string> temp = testQueue;
+        while (!temp.empty()) {
+            cout << temp.front() << endl;
+            temp.pop();
+        }
+    }
 
     // Prescriptions
     void addPrescription(string medicine) {
-		prescriptions.push_back(medicine);
-		bill += 100;
-		addMedicalRecord("Prescription added: " + medicine);
-	}
-	
+        prescriptions.push_back(medicine);
+        bill += 100;
+        addMedicalRecord("Prescription added: " + medicine);
+        cout << "Medicine prescribed successfully." << endl;
+    }
+
     void displayPrescriptions() {
-		cout << "Prescriptions for " << name << " (ID: " << id << "):" << endl;
+        cout << "Prescriptions:" << endl;
 
-		if (prescriptions.empty()) {
-			cout << "No prescriptions." << endl;
-			return;
-		}
+        if (prescriptions.empty()) {
+            cout << "No prescriptions." << endl;
+            return;
+        }
 
-		for (string &med : prescriptions) {
-			cout << "- " << med << endl;
-		}
-	}
+        for (string &med : prescriptions) {
+            cout << med << endl;
+        }
+    }
 
     // Billing
     void addBill(double amount) {
-		bill += amount;
-	}
-	
+        bill += amount;
+    }
+
     double getBill() {
-		return bill;
-	}
-	
+        return bill;
+    }
+
     void displayBill() {
-		cout << "========== PATIENT BILL ==========" << endl;
-		cout << "Patient ID: " << id << endl;
-		cout << "Patient Name: " << name << endl;
-		cout << "Total Bill: $" << bill << endl;
-		cout << "==================================" << endl;
-	}
+        cout << "========== PATIENT BILL ==========" << endl;
+        cout << "Patient ID: " << id << endl;
+        cout << "Patient Name: " << name << endl;
+        cout << "Total Bill: $" << bill << endl;
+        cout << "==================================" << endl;
+    }
 
     // Additional Getters
-    int getAge(){
-		return age;
-	}
+    int getAge() {
+        return age;
+    }
     string getContact() {
         return contact;
     }
@@ -252,18 +253,18 @@ public:
     void addAppointment(int patientId) {
         appointmentQueue.push(patientId);
     }
+
     int seePatient() {
         if (appointmentQueue.empty()) {
             return -1;
         }
         else {
-
             int patientId = appointmentQueue.front();
             appointmentQueue.pop();
             return patientId;
-
         }
     }
+
     int getId() {
         return id;
     }
@@ -271,85 +272,74 @@ public:
         return name;
     }
 
-    string getDepartment(){
-        switch (department)
-        {
-        case CARDIOLOGY:
-            return "Cardiology";
-
-        case NEUROLOGY:
-            return "Neurology";
-
-        case ORTHOPEDICS:
-            return "Orthopedics";
-
-        case PEDIATRICS:
-            return "Pediatrics";
-
-        case EMERGENCY:
-            return "Emergency";
-
-        case GENERAL:
-            return "General";
-
-        default:
-            return "General";
+    string getDepartment() {
+        switch (department) {
+            case CARDIOLOGY:
+                return "Cardiology";
+            case NEUROLOGY:
+                return "Neurology";
+            case ORTHOPEDICS:
+                return "Orthopedics";
+            case PEDIATRICS:
+                return "Pediatrics";
+            case EMERGENCY:
+                return "Emergency";
+            case GENERAL:
+                return "General";
+            default:
+                return "General";
         }
-        }
+    }
 
 
     // ========== NEW FEATURES ========== //
 
     // Display waiting patients
     void displayAppointments() {
-        if (appointmentQueue.empty())
-        {
-            cout << "No appointments available." << endl;
+        if (appointmentQueue.empty()) {
+            cout << "No appointments." << endl;
             return;
         }
 
         queue<int> temp = appointmentQueue;
+        cout << "Appointment Queue:" << endl;
 
-        cout << "Appointments: ";
-
-        while (!temp.empty())
-        {
-            cout << temp.front() << " ";
+        while (!temp.empty()) {
+            cout << "- Patient ID: " << temp.front() << endl;
             temp.pop();
         }
-
-        cout << endl;
     }
 
     // Cancel appointment
     void cancelAppointment(int patientId) {
-        queue<int> tempQueue;
         if (appointmentQueue.empty()) {
-            cout << "no appointments availalable" << endl;
+            cout << "No appointments available." << endl;
             return;
         }
-        queue<int>temp;
+
+        queue<int> temp;
         bool found = false;
+
         while (!appointmentQueue.empty()) {
             int currentPatientId = appointmentQueue.front();
             appointmentQueue.pop();
-            if (currentPatientId == patientId) {
 
-                found = true;// Skip adding this patient to the temp queue
-            }
-            else {
-
+            if (!found && currentPatientId == patientId) {
+                found = true;
+            } else {
                 temp.push(currentPatientId);
             }
         }
+
         appointmentQueue = temp;
+
         if (found) {
-            cout << "Appointment cancelled successfully  " << endl;
-        }
-        else {
-            cout << "Appointment not found  " << endl;
+            cout << "Appointment cancelled successfully." << endl;
+        } else {
+            cout << "Appointment not found." << endl;
         }
     }
+
     // Number of waiting patients
     int getAppointmentCount() {
         return appointmentQueue.size();
@@ -360,7 +350,6 @@ public:
 // ========== HOSPITAL CLASS ========== //
 class Hospital {
 private:
-
     // Main collections
     vector<Patient> patients;
     vector<Doctor> doctors;
@@ -376,54 +365,36 @@ private:
     int doctorCounter;
 
     // ========== ROOM MANAGEMENT ========== //
-
     int generalRooms;
     int icuRooms;
     int privateRooms;
     int semiPrivateRooms;
 
-
 public:
-
     // Constructor
     Hospital() {
         patientCounter = 1;
         doctorCounter = 1;
-        // Initialize room counts
-        generalRooms = 10;
+
+        generalRooms = 20;
         icuRooms = 5;
-        privateRooms = 3;
-		semiPrivateRooms = 4;
+        privateRooms = 10;
+        semiPrivateRooms = 10;
     }
 
-
-    // =====================================================
-    // ORIGINAL FEATURES
-    // ===================================================== //
-
-    int registerPatient(
-        string name,
-        int age,
-        string contact
-    ){
+    int registerPatient(string name, int age, string contact) {
         Patient newPatient(patientCounter, name, age, contact);
         patients.push_back(newPatient);
         return patientCounter++;
-	}
+    }
 
-    int addDoctor(
-        string name,
-        Department dept
-    ) {
+    int addDoctor(string name, Department dept) {
         Doctor newDoctor(doctorCounter, name, dept);
         doctors.push_back(newDoctor);
         return doctorCounter++;
     }
 
-    void admitPatient(
-        int patientId,
-        RoomType type
-    ){
+    void admitPatient(int patientId, RoomType type) {
         Patient* patient = findPatient(patientId);
         if (patient != nullptr) {
             if (patient->getAdmissionStatus()) {
@@ -431,116 +402,216 @@ public:
                 return;
             }
             if (!isRoomAvailable(type)) {
-                cout << "No rooms available of the requested type." << endl;
+                cout << "No room available for this room type." << endl;
                 return;
             }
             patient->admitPatient(type);
-            switch (type) {
-                case GENERAL_WARD:
-                    generalRooms--;
-                    break;
-                case ICU:
-                    icuRooms--;
-                    break;
-                case PRIVATE_ROOM:
-                    privateRooms--;
-                    break;
-                case SEMI_PRIVATE:
-                    semiPrivateRooms--;
-                    break;
-            }
-            cout << "Patient admitted successfully." << endl;
         } else {
-            cout << "Patient not found." << endl;
+            cout << "Patient with ID " << patientId << " not found." << endl;
         }
-	}
-
-    void addEmergency(
-        int patientId
-    );
-
-    int handleEmergency();
-
-    void bookAppointment(int doctorId, int patientId);
-    {
-        Doctor* doctor = nullptr;
-        Patient* patient = nullptr;
-        for (auto& d : doctors) {
-            if (d.getId() == doctorId) {
-                doctor = &d;
-                break;
-            }
-        }
-        for (auto& p : patients) {
-            if (p.getId() == patientId) {
-                patient = &p;
-                break;
-            }
-        }
-        if (doctor == nullptr && patient == nullptr) {
-            cout << "Doctor and Patient not found." << endl;
-            return;
-        }
-
-        if (doctor == nullptr) {
-            cout << "Doctor not found." << endl;
-            return;
-        }
-
-        if (patient == nullptr) {
-            cout << "Patient not found." << endl;
-            return;
-        }
-        doctor->addAppointment(patientId);
-
-        cout << "Appointment booked successfully." << endl;
-
     }
-    
 
-    void displayPatientInfo(int patientId);
-  
+    void bookAppointment(int doctorId, int patientId) {
+        Doctor* doctor = findDoctor(doctorId);
+        Patient* patient = findPatient(patientId);
 
+        if (doctor == nullptr && patient == nullptr) {
+            cout << "Doctor with ID " << doctorId << " not found." << endl;
+            cout << "Patient with ID " << patientId << " not found." << endl;
+            return;
+        }
+        if (doctor == nullptr) {
+            cout << "Doctor with ID " << doctorId << " not found." << endl;
+            return;
+        }
+        if (patient == nullptr) {
+            cout << "Patient with ID " << patientId << " not found." << endl;
+            return;
+        }
 
-    void displayDoctorInfo(
-        int doctorId
-    );
+        doctor->addAppointment(patientId);
+        cout << "Appointment booked for patient " << patientId << " with doctor " << doctorId << endl;
+    }
 
+    void cancelAppointment(int doctorId, int patientId) {
+        Doctor* doctor = findDoctor(doctorId);
+        if (doctor != nullptr) {
+            doctor->cancelAppointment(patientId);
+        } else {
+            cout << "Doctor with ID " << doctorId << " not found." << endl;
+        }
+    }
 
-    // =====================================================
-    // NEW FEATURE 1
-    // Find Patient
-    // ===================================================== //
+    void doctorSeePatient(int doctorId) {
+        Doctor* doctor = findDoctor(doctorId);
+        if (doctor != nullptr) {
+            int patientId = doctor->seePatient();
+            if (patientId == -1) {
+                cout << "No patients waiting." << endl;
+            } else {
+                cout << "Dr. " << doctor->getName() << " is now seeing patient " << patientId << endl;
+            }
+        } else {
+            cout << "Doctor with ID " << doctorId << " not found." << endl;
+        }
+    }
 
-    Patient* findPatient(
-        int patientId
-    );
+    void displayDoctorAppointments(int doctorId) {
+        Doctor* doctor = findDoctor(doctorId);
+        if (doctor != nullptr) {
+            cout << "Appointments for " << doctor->getName() << ":" << endl;
+            doctor->displayAppointments();
+        } else {
+            cout << "Doctor with ID " << doctorId << " not found." << endl;
+        }
+    }
 
+    void addEmergency(int patientId) {
+        emergencyQueue.push(patientId);
+    }
 
-    // =====================================================
-    // NEW FEATURE 2
-    // Find Doctor
-    // ===================================================== //
+    int handleEmergency() {
+        if (emergencyQueue.empty()) {
+            cout << "No emergencies in queue." << endl;
+            return -1;
+        }
+        int pid = emergencyQueue.front();
+        emergencyQueue.pop();
+        cout << "Handled emergency for patient: " << pid << endl;
+        return pid;
+    }
 
-    Doctor* findDoctor(
-        int doctorId
-    );
+    void addPriorityEmergency(int patientId, int severity) {
+        Patient* patient = findPatient(patientId);
+        if (patient == nullptr) {
+            cout << "Patient with ID " << patientId << " not found." << endl;
+            return;
+        }
+        if (severity < 1 || severity > 5) {
+            cout << "Invalid severity level." << endl;
+            return;
+        }
+        priorityEmergencyQueue.push(EmergencyCase(patientId, severity));
+        cout << "Emergency added with severity " << severity << endl;
+    }
 
+    int handlePriorityEmergency() {
+        if (priorityEmergencyQueue.empty()) {
+            cout << "No priority emergencies." << endl;
+            return -1;
+        }
+        EmergencyCase topCase = priorityEmergencyQueue.top();
+        priorityEmergencyQueue.pop();
+        cout << "Handling patient " << topCase.getPatientId()
+             << " with severity " << topCase.getSeverity() << endl;
+        return topCase.getPatientId();
+    }
 
-    // =====================================================
-    // NEW FEATURE 3
-    // Search Patient By Name
-    // ===================================================== //
+    Patient* findPatient(int patientId) {
+        for (auto& patient : patients) {
+            if (patient.getId() == patientId) {
+                return &patient;
+            }
+        }
+        return nullptr;
+    }
 
-    void searchPatientByName(
-        string name
-    );
+    Doctor* findDoctor(int doctorId) {
+        for (auto& doctor : doctors) {
+            if (doctor.getId() == doctorId) {
+                return &doctor;
+            }
+        }
+        return nullptr;
+    }
 
+    void displayPatientInfo(int patientId) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            cout << "Patient Information:" << endl;
+            cout << "ID: " << patient->getId() << endl;
+            cout << "Name: " << patient->getName() << endl;
+            cout << "Admission Status: " << (patient->getAdmissionStatus() ? "Admitted" : "Not Admitted") << endl;
+            patient->displayHistory();
+        } else {
+            cout << "Patient with ID " << patientId << " not found." << endl;
+        }
+    }
 
-    // =====================================================
-    // NEW FEATURE 4
-    // Discharge Patient
-    // ===================================================== //
+    void displayDoctorInfo(int doctorId) {
+        Doctor* doctor = findDoctor(doctorId);
+        if (doctor != nullptr) {
+            cout << "Doctor Information:" << endl;
+            cout << "ID: " << doctor->getId() << endl;
+            cout << "Name: " << doctor->getName() << endl;
+            cout << "Department: " << doctor->getDepartment() << endl;
+        } else {
+            cout << "Doctor with ID " << doctorId << " not found." << endl;
+        }
+    }
+
+    void searchPatientByName(string name) {
+        bool found = false;
+        for (auto& patient : patients) {
+            if (patient.getName() == name) {
+                cout << "Patient Found:" << endl;
+                cout << "ID: " << patient.getId() << endl;
+                cout << "Name: " << patient.getName() << endl;
+                cout << "Age: " << patient.getAge() << endl;
+                cout << "Contact: " << patient.getContact() << endl;
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "Patient not found." << endl;
+        }
+    }
+
+    void displayAllPatients() {
+        cout << "========== ALL PATIENTS ==========" << endl;
+        for (auto& patient : patients) {
+            cout << "ID: " << patient.getId()
+                 << " | Name: " << patient.getName()
+                 << " | Age: " << patient.getAge()
+                 << " | Status: " << (patient.getAdmissionStatus() ? "Admitted" : "Not Admitted") << endl;
+        }
+    }
+
+    void displayAllDoctors() {
+        cout << "========== ALL DOCTORS ==========" << endl;
+        for (auto& doctor : doctors) {
+            cout << "ID: " << doctor.getId()
+                 << " | Name: " << doctor.getName()
+                 << " | Department: " << doctor.getDepartment()
+                 << " | Appointments: " << doctor.getAppointmentCount() << endl;
+        }
+    }
+
+    void displayStatistics() {
+        int admittedCount = 0;
+        double totalBilled = 0;
+
+        for (auto& patient : patients) {
+            if (patient.getAdmissionStatus()) {
+                admittedCount++;
+            }
+            totalBilled += patient.getBill();
+        }
+
+        cout << "========== HOSPITAL STATISTICS ==========" << endl;
+        cout << "Total Patients: " << patients.size() << endl;
+        cout << "Total Doctors: " << doctors.size() << endl;
+        cout << "Admitted Patients: " << admittedCount << endl;
+        cout << "Waiting Emergencies: " << emergencyQueue.size() << endl;
+        cout << "Priority Emergencies: " << priorityEmergencyQueue.size() << endl;
+        cout << "Total Generated Bills: $" << totalBilled << endl;
+        cout << "=========================================" << endl;
+
+        cout << "Final Patient Bills:" << endl;
+        for (auto& patient : patients) {
+            patient.displayBill();
+        }
+    }
 
     void dischargePatient(int patientId) {
         Patient* patient = findPatient(patientId);
@@ -548,263 +619,87 @@ public:
             patient->dischargePatient();
             cout << "Patient discharged successfully." << endl;
         } else {
-            cout << "Patient not found." << endl;
+            cout << "Patient with ID " << patientId << " not found." << endl;
         }
     }
 
+    void requestPatientTest(int patientId, string testName) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            patient->requestTest(testName);
+        } else {
+            cout << "Patient with ID " << patientId << " not found." << endl;
+        }
+    }
 
-    // =====================================================
-    // NEW FEATURE 5
-    // Request Medical Test
-    // ===================================================== //
+    void performPatientTest(int patientId) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            string result = patient->performTest();
+            cout << "Test result/action: " << result << endl;
+        } else {
+            cout << "Patient with ID " << patientId << " not found." << endl;
+        }
+    }
 
-    void requestPatientTest(
-        int patientId,
-        string testName
-    ) {
-		Patient* patient = findPatient(patientId);
-		if (patient != nullptr) {
-			patient->requestTest(testName);
-		} else {
-			cout << "Patient not found." << endl;
-		}
-	}
+    void displayPatientTests(int patientId) {
+        Patient* patient = findPatient(patientId);
+        if (patient != nullptr) {
+            patient->displayPendingTests();
+        } else {
+            cout << "Patient with ID " << patientId << " not found." << endl;
+        }
+    }
 
-
-    // =====================================================
-    // NEW FEATURE 6
-    // Perform Medical Test
-    // ===================================================== //
-
-    void performPatientTest(
-        int patientId
-    ) {
-		Patient* patient = findPatient(patientId);
-		if (patient != nullptr) {
-			string result = patient->performTest();
-			cout << "Test performed: " << result << endl;
-		} else {
-			cout << "Patient not found." << endl;
-		}
-	}
-
-
-    // =====================================================
-    // NEW FEATURE 7
-    // Display Pending Tests
-    // ===================================================== //
-
-    void displayPatientTests(
-        int patientId
-    ) {	
-		Patient* patient = findPatient(patientId);
-		if (patient != nullptr) {
-			patient->displayPendingTests();
-		} else {
-			cout << "Patient not found." << endl;
-		}
-	}
-
-
-    // =====================================================
-    // NEW FEATURE 8
-    // Add Prescription
-    // ===================================================== //
-
-    void prescribeMedicine(
-        int patientId,
-        string medicine
-    ) {
+    void prescribeMedicine(int patientId, string medicine) {
         Patient* patient = findPatient(patientId);
         if (patient != nullptr) {
             patient->addPrescription(medicine);
-            cout << "Prescription added successfully." << endl;
         } else {
-            cout << "Patient not found." << endl;
-		}
+            cout << "Patient with ID " << patientId << " not found." << endl;
+        }
     }
 
-
-    // =====================================================
-    // NEW FEATURE 9
-    // Display Prescriptions
-    // ===================================================== //
-
-    void displayPrescriptions(
-        int patientId
-    ) {
+    void displayPrescriptions(int patientId) {
         Patient* patient = findPatient(patientId);
         if (patient != nullptr) {
             patient->displayPrescriptions();
         } else {
-			cout << "Patient not found." << endl;
-		}
+            cout << "Patient with ID " << patientId << " not found." << endl;
+        }
     }
-
-
-    // =====================================================
-    // NEW FEATURE 10
-    // Patient Bill
-    // ===================================================== //
 
     void displayPatientBill(int patientId) {
         Patient* patient = findPatient(patientId);
         if (patient != nullptr) {
             patient->displayBill();
         } else {
-            cout << "Patient not found." << endl;
+            cout << "Patient with ID " << patientId << " not found." << endl;
         }
     }
 
-
-    // =====================================================
-    // NEW FEATURE 11
-    // Priority Emergency
-    // ===================================================== //
-
-    void addPriorityEmergency(
-        int patientId,
-        int severity
-    );
-
-
-    // =====================================================
-    // NEW FEATURE 12
-    // Handle Priority Emergency
-    // ===================================================== //
-
-    int handlePriorityEmergency();
-
-
-    // =====================================================
-    // NEW FEATURE 13
-    // Room Availability
-    // ===================================================== //
-
-    bool isRoomAvailable(
-        RoomType type
-    ){
+    bool isRoomAvailable(RoomType type) {
         switch (type) {
-        case GENERAL_WARD:
-            return generalRooms > 0;
-        case ICU:
-            return icuRooms > 0;
-        case PRIVATE_ROOM:
-            return privateRooms > 0;
-        case SEMI_PRIVATE:
-            return semiPrivateRooms > 0;
-        default:
-            return false;
+            case GENERAL_WARD:
+                return generalRooms > 0;
+            case ICU:
+                return icuRooms > 0;
+            case PRIVATE_ROOM:
+                return privateRooms > 0;
+            case SEMI_PRIVATE:
+                return semiPrivateRooms > 0;
+            default:
+                return false;
         }
-	}
-
-
-    // =====================================================
-    // NEW FEATURE 14
-    // Display Room Status
-    // ===================================================== //
-
-    void displayRoomStatus(){
-        cout << "Room Status:" << endl;
-        cout << "General Ward: " << generalRooms << " available" << endl;
-        cout << "ICU: " << icuRooms << " available" << endl;
-        cout << "Private Room: " << privateRooms << " available" << endl;
-        cout << "Semi-Private Room: " << semiPrivateRooms << " available" << endl;
-	}
-
-
-    // =====================================================
-    // NEW FEATURE 15
-    // Display All Patients
-    // ===================================================== //
-
-    void displayAllPatients();
-
-
-    // =====================================================
-    // NEW FEATURE 16
-    // Display All Doctors
-    // ===================================================== //
-
-    void displayAllDoctors();
-
-
-    // =====================================================
-    // NEW FEATURE 17
-    // Display Doctor Appointments
-    // ===================================================== //
-
-    void displayDoctorAppointments(
-        int doctorId
-    ) {
-		Doctor* doctor = findDoctor(doctorId);
-        if (doctor != nullptr) {
-            cout << "Appointments for Dr. " << doctor->getName() << ": ";
-            doctor->displayAppointments();
-        } else {
-            cout << "Doctor not found." << endl;
-		}
     }
 
-
-    // =====================================================
-    // NEW FEATURE 18
-    // Cancel Appointment
-    // ===================================================== //
-
-    void cancelAppointment(
-        int doctorId,
-        int patientId
-    )
-    {
-        for (Doctor& doctor : doctors)
-        {
-            if (doctor.getId() == doctorId)
-            {
-                doctor.cancelAppointment(patientId);
-                return;
-            }
-        }
-        cout << "Doctor not found." << endl;
+    void displayRoomStatus() {
+        cout << "========== ROOM STATUS ==========" << endl;
+        cout << "General Ward: " << generalRooms << endl;
+        cout << "ICU: " << icuRooms << endl;
+        cout << "Private Rooms: " << privateRooms << endl;
+        cout << "Semi Private Rooms: " << semiPrivateRooms << endl;
     }
-
-    // =====================================================
-    // NEW FEATURE 19
-    // Doctor Sees Next Patient
-    // ===================================================== //
-
-    void doctorSeePatient(int doctorId)
-        {
-            for (Doctor& doctor : doctors)
-            {
-                if (doctor.getId() == doctorId)
-                {
-                    int patientId = doctor.seePatient();
-
-                    if (patientId == -1)
-                    {
-                        cout << "No patients waiting." << endl;
-                    }
-                    else
-                    {
-                        cout << "Doctor " << doctor.getName()
-                            << " is now seeing patient "
-                            << patientId << endl;
-                    }
-
-                    return;
-                }
-            }
-
-            cout << "Doctor not found." << endl;
-        }
-
-    // =====================================================
-    // NEW FEATURE 20
-    // Hospital Statistics
-    // ===================================================== //
-
-    void displayStatistics();
 };
 
 
@@ -813,400 +708,101 @@ int main() {
 
     Hospital hospital;
 
+    // TEST CASE 1: Registering patients
+    int p1 = hospital.registerPatient("John Doe", 35, "555-1234");
+    int p2 = hospital.registerPatient("Jane Smith", 28, "555-5678");
+    int p3 = hospital.registerPatient("Mike Johnson", 45, "555-9012");
 
-    // =====================================================
-    // TEST CASE 1
-    // Registering patients
-    // ===================================================== //
+    // TEST CASE 2: Adding doctors
+    int d1 = hospital.addDoctor("Dr. Smith", CARDIOLOGY);
+    int d2 = hospital.addDoctor("Dr. Brown", NEUROLOGY);
+    int d3 = hospital.addDoctor("Dr. Lee", PEDIATRICS);
 
-    int p1 =
-        hospital.registerPatient(
-            "John Doe",
-            35,
-            "555-1234"
-        );
+    // TEST CASE 3: Admitting patients
+    hospital.admitPatient(p1, PRIVATE_ROOM);
+    hospital.admitPatient(p2, ICU);
+    hospital.admitPatient(p1, SEMI_PRIVATE);
 
-    int p2 =
-        hospital.registerPatient(
-            "Jane Smith",
-            28,
-            "555-5678"
-        );
+    // TEST CASE 4: Booking appointments
+    hospital.bookAppointment(d1, p1);
+    hospital.bookAppointment(d1, p2);
+    hospital.bookAppointment(d2, p3);
+    hospital.bookAppointment(999, p1);
+    hospital.bookAppointment(d1, 999);
 
-    int p3 =
-        hospital.registerPatient(
-            "Mike Johnson",
-            45,
-            "555-9012"
-        );
-
-
-    // =====================================================
-    // TEST CASE 2
-    // Adding doctors
-    // ===================================================== //
-
-    int d1 =
-        hospital.addDoctor(
-            "Dr. Smith",
-            CARDIOLOGY
-        );
-
-    int d2 =
-        hospital.addDoctor(
-            "Dr. Brown",
-            NEUROLOGY
-        );
-
-    int d3 =
-        hospital.addDoctor(
-            "Dr. Lee",
-            PEDIATRICS
-        );
-
-
-    // =====================================================
-    // TEST CASE 3
-    // Admitting patients
-    // ===================================================== //
-
-    hospital.admitPatient(
-        p1,
-        PRIVATE_ROOM
-    );
-
-    hospital.admitPatient(
-        p2,
-        ICU
-    );
-
-    // Try admitting already admitted patient
-    hospital.admitPatient(
-        p1,
-        SEMI_PRIVATE
-    );
-
-
-    // =====================================================
-    // TEST CASE 4
-    // Booking appointments
-    // ===================================================== //
-
-    hospital.bookAppointment(
-        d1,
-        p1
-    );
-
-    hospital.bookAppointment(
-        d1,
-        p2
-    );
-
-    hospital.bookAppointment(
-        d2,
-        p3
-    );
-
-    // Invalid doctor
-    hospital.bookAppointment(
-        999,
-        p1
-    );
-
-    // Invalid patient
-    hospital.bookAppointment(
-        d1,
-        999
-    );
-
-
-    // =====================================================
-    // TEST CASE 5
-    // Handling medical tests
-    // ===================================================== //
-
-    hospital.requestPatientTest(
-        p1,
-        "Blood Test"
-    );
-
-    hospital.requestPatientTest(
-        p1,
-        "X-Ray"
-    );
-
-    hospital.requestPatientTest(
-        p1,
-        "MRI"
-    );
-
-    hospital.displayPatientTests(
-        p1
-    );
-
-    hospital.performPatientTest(
-        p1
-    );
-
-    hospital.displayPatientTests(
-        p1
-    );
-
-
-    // =====================================================
-    // TEST CASE 6
-    // Emergency cases
-    // ===================================================== //
-
+    // TEST CASE 5: Handling medical tests
     hospital.addEmergency(p3);
-
     hospital.addEmergency(p1);
+    hospital.handleEmergency();
+    hospital.handleEmergency();
+    hospital.handleEmergency();
 
-    int emergencyPatient =
-        hospital.handleEmergency();
+    // TEST CASE 6: Information Display & Edge Cases
+    hospital.displayPatientInfo(p1);
+    hospital.displayPatientInfo(p2);
+    hospital.displayPatientInfo(999);
 
-    emergencyPatient =
-        hospital.handleEmergency();
+    hospital.displayDoctorInfo(d1);
+    hospital.displayDoctorInfo(d2);
+    hospital.displayDoctorInfo(999);
 
-    emergencyPatient =
-        hospital.handleEmergency();
+    hospital.dischargePatient(999);
+    hospital.cancelAppointment(999, p1);
+    hospital.handleEmergency();
 
-    // No more emergencies
+    // TEST CASE 7: Search, Tests & Prescriptions
+    cout << "========== NEW FEATURES ==========" << endl;
+    hospital.searchPatientByName("John Doe");
 
+    hospital.requestPatientTest(p1, "Blood Test");
+    hospital.requestPatientTest(p1, "X-Ray");
+    hospital.requestPatientTest(p1, "MRI");
 
-    // =====================================================
-    // TEST CASE 7
-    // Discharging patients
-    // ===================================================== //
+    cout << "Pending tests:" << endl;
+    hospital.displayPatientTests(p1);
 
-    hospital.dischargePatient(
-        p1
-    );
+    cout << "Performing first test:" << endl;
+    hospital.performPatientTest(p1);
 
+    cout << "Remaining tests:" << endl;
+    hospital.displayPatientTests(p1);
 
-    // =====================================================
-    // TEST CASE 8
-    // Displaying information
-    // ===================================================== //
+    hospital.prescribeMedicine(p1, "Paracetamol");
+    hospital.prescribeMedicine(p1, "Antibiotic");
+    hospital.displayPrescriptions(p1);
 
-    hospital.displayPatientInfo(
-        p1
-    );
+    // TEST CASE 8: Billing, Appointment Management & Priority Emergencies
+    hospital.displayPatientBill(p1);
 
-    hospital.displayPatientInfo(
-        p2
-    );
+    hospital.displayDoctorAppointments(d1);
+    hospital.displayDoctorAppointments(d2);
 
-    hospital.displayPatientInfo(
-        999
-    );
+    hospital.doctorSeePatient(d1);
+    hospital.displayDoctorAppointments(d1);
 
+    hospital.cancelAppointment(d1, p2);
+    hospital.displayDoctorAppointments(d1);
 
-    hospital.displayDoctorInfo(
-        d1
-    );
+    hospital.addPriorityEmergency(p1, 2);
+    hospital.addPriorityEmergency(p2, 5);
+    hospital.addPriorityEmergency(p3, 3);
+    hospital.addPriorityEmergency(p1, 4);
 
-    hospital.displayDoctorInfo(
-        d2
-    );
-
-    hospital.displayDoctorInfo(
-        999
-    );
-
-
-    // =====================================================
-    // TEST CASE 9
-    // Doctor seeing patients
-    // ===================================================== //
-
-    hospital.displayDoctorAppointments(
-        d1
-    );
-
-    hospital.doctorSeePatient(
-        d1
-    );
-
-    hospital.displayDoctorAppointments(
-        d1
-    );
-
-
-    // =====================================================
-    // TEST CASE 10
-    // Search Patient
-    // ===================================================== //
-
-    hospital.searchPatientByName(
-        "John Doe"
-    );
-
-    hospital.searchPatientByName(
-        "Unknown Patient"
-    );
-
-
-    // =====================================================
-    // TEST CASE 11
-    // Prescriptions
-    // ===================================================== //
-
-    hospital.prescribeMedicine(
-        p1,
-        "Paracetamol"
-    );
-
-    hospital.prescribeMedicine(
-        p1,
-        "Antibiotic"
-    );
-
-    hospital.displayPrescriptions(
-        p1
-    );
-
-
-    // =====================================================
-    // TEST CASE 12
-    // Patient Billing
-    // ===================================================== //
-
-    hospital.displayPatientBill(
-        p1
-    );
-
-    hospital.displayPatientBill(
-        p2
-    );
-
-
-    // =====================================================
-    // TEST CASE 13
-    // Priority Emergency
-    // ===================================================== //
-
-    hospital.addPriorityEmergency(
-        p1,
-        2
-    );
-
-    hospital.addPriorityEmergency(
-        p2,
-        5
-    );
-
-    hospital.addPriorityEmergency(
-        p3,
-        3
-    );
-
-    hospital.addPriorityEmergency(
-        p1,
-        4
-    );
-
-
-    // =====================================================
-    // TEST CASE 14
-    // Handle Priority Emergencies
-    // ===================================================== //
-
+    cout << "Handling priority emergencies:" << endl;
+    hospital.handlePriorityEmergency();
+    hospital.handlePriorityEmergency();
+    hospital.handlePriorityEmergency();
     hospital.handlePriorityEmergency();
 
-    hospital.handlePriorityEmergency();
-
-    hospital.handlePriorityEmergency();
-
-    hospital.handlePriorityEmergency();
-
-
-    // =====================================================
-    // TEST CASE 15
-    // Room Management
-    // ===================================================== //
-
+    // TEST CASE 9: Room Status, Listings, Discharge & Final Statistics
     hospital.displayRoomStatus();
-
-
-    // =====================================================
-    // TEST CASE 16
-    // Display All Patients
-    // ===================================================== //
-
     hospital.displayAllPatients();
-
-
-    // =====================================================
-    // TEST CASE 17
-    // Display All Doctors
-    // ===================================================== //
-
     hospital.displayAllDoctors();
 
-
-    // =====================================================
-    // TEST CASE 18
-    // Cancel Appointment
-    // ===================================================== //
-
-    hospital.cancelAppointment(
-        d1,
-        p2
-    );
-
-
-    // =====================================================
-    // TEST CASE 19
-    // More Doctor Appointments
-    // ===================================================== //
-
-    hospital.displayDoctorAppointments(
-        d1
-    );
-
-    hospital.displayDoctorAppointments(
-        d2
-    );
-
-
-    // =====================================================
-    // TEST CASE 20
-    // Hospital Statistics
-    // ===================================================== //
+    hospital.dischargePatient(p1);
+    hospital.displayPatientInfo(p1);
 
     hospital.displayStatistics();
-
-
-    // =====================================================
-    // TEST CASE 21
-    // Edge Cases
-    // ===================================================== //
-
-    Hospital emptyHospital;
-
-    emptyHospital.displayPatientInfo(
-        1
-    );
-
-    emptyHospital.displayDoctorInfo(
-        1
-    );
-
-    emptyHospital.handleEmergency();
-
-    emptyHospital.handlePriorityEmergency();
-
-    emptyHospital.searchPatientByName(
-        "John Doe"
-    );
-
-    emptyHospital.displayAllPatients();
-
-    emptyHospital.displayAllDoctors();
-
-    emptyHospital.displayStatistics();
-
 
     return 0;
 }
